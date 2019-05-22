@@ -29,6 +29,9 @@ pub trait Token<L: Lifetime>: FromResponse {
     /// Returns the scope, if available.
     fn scope(&self) -> Option<&str>;
 
+    /// Returns the ID token, if available. Returned by Google providers in some cases.
+    fn id_token(&self) -> Option<&str>;
+
     /// Returns the token lifetime.
     fn lifetime(&self) -> &L;
 }

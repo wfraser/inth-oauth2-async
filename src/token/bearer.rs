@@ -21,6 +21,9 @@ impl<L: Lifetime> Token<L> for Bearer<L> {
     fn scope(&self) -> Option<&str> {
         self.scope.as_ref().map(|s| &s[..])
     }
+    fn id_token(&self) -> Option<&str> {
+        self.id_token.as_ref().map(|s| &s[..])
+    }
     fn lifetime(&self) -> &L {
         &self.lifetime
     }
