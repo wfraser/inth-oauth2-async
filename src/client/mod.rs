@@ -5,7 +5,6 @@ pub use error::ClientError;
 
 pub mod response;
 
-use reqwest;
 use reqwest::header::{ACCEPT, CONTENT_TYPE};
 use serde_json::{self, Value};
 use url::form_urlencoded::Serializer;

@@ -50,7 +50,7 @@ impl<L: Lifetime> Bearer<L> {
             access_token: access_token.into(),
             scope: scope.map(Into::into),
             id_token: id_token.map(Into::into),
-            lifetime: lifetime,
+            lifetime,
         })
     }
 }

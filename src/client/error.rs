@@ -1,10 +1,6 @@
 use std::error::Error;
 use std::{fmt, io};
 
-use reqwest;
-use serde_json;
-use url;
-
 use crate::client::response::ParseError;
 use crate::error::OAuth2Error;
 
