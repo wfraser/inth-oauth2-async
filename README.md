@@ -1,21 +1,18 @@
 # "It's not that hard" OAuth2 Client
 
 [![Crate Version][crate-badge]][crate]
-[![Build Status][travis-badge]][travis]
+[![Documentation][docs-badge]][docs]
 
-[crate-badge]: https://img.shields.io/crates/v/inth-oauth2.svg
-[crate]: https://crates.io/crates/inth-oauth2
-[travis-badge]: https://img.shields.io/travis/programble/inth-oauth2/master.svg
-[travis]: https://travis-ci.org/programble/inth-oauth2
+[crate-badge]: https://img.shields.io/crates/v/inth-oauth2-async.svg
+[crate]: https://crates.io/crates/inth-oauth2-async
+[docs-badge]: https://docs.rs/inth-oauth2-async/badge.svg
+[docs]: https://docs.rs/inth-oauth2-async
 
 OAuth2 really isn't that hard, you know?
 
-## [Documentation][docs]
-
-[docs]: https://docs.rs/crate/inth-oauth2
-
 ## License
 
+Copyright © 2021, William R. Fraser <wfraser@codewise.org>
 Copyright © 2015, Curtis McEnroe <curtis@cmcenroe.me>
 
 Permission to use, copy, modify, and/or distribute this software for any
