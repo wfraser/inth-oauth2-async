@@ -6,8 +6,8 @@
 //!
 //! `inth_oauth2` is on [Crates.io][crate] and [GitHub][github].
 //!
-//! [crate]: https://crates.io/crates/inth-oauth2
-//! [github]: https://github.com/programble/inth-oauth2
+//! [crate]: https://crates.io/crates/inth-oauth2-async
+//! [github]: https://github.com/wfraser/inth-oauth2-async
 //!
 //! ## Providers
 //!
