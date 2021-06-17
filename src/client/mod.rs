@@ -1,9 +1,9 @@
 //! Client.
 
 mod error;
+pub use error::ClientError;
 
 pub mod response;
-pub use self::error::ClientError;
 
 use reqwest;
 use reqwest::header::{ACCEPT, CONTENT_TYPE};
@@ -11,10 +11,10 @@ use serde_json::{self, Value};
 use url::form_urlencoded::Serializer;
 use url::Url;
 
-use client::response::FromResponse;
-use error::OAuth2Error;
-use provider::Provider;
-use token::{Lifetime, Refresh, Token};
+use crate::client::response::FromResponse;
+use crate::error::OAuth2Error;
+use crate::provider::Provider;
+use crate::token::{Lifetime, Refresh, Token};
 
 /// OAuth 2.0 client.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -38,8 +38,8 @@ impl<P: Provider> Client<P> {
     /// # Examples
     ///
     /// ```
-    /// use inth_oauth2::Client;
-    /// use inth_oauth2::provider::google::Installed;
+    /// use inth_oauth2_async::Client;
+    /// use inth_oauth2_async::provider::google::Installed;
     ///
     /// let client = Client::new(
     ///     Installed,
@@ -69,8 +69,8 @@ impl<P: Provider> Client<P> {
     /// # Examples
     ///
     /// ```
-    /// use inth_oauth2::Client;
-    /// use inth_oauth2::provider::google::Installed;
+    /// use inth_oauth2_async::Client;
+    /// use inth_oauth2_async::provider::google::Installed;
     ///
     /// let client = Client::new(
     ///     Installed,
@@ -200,10 +200,8 @@ impl<P> Client<P> where P: Provider, P::Token: Token<Refresh> {
 
 #[cfg(test)]
 mod tests {
-    use url::Url;
-    use token::{Bearer, Static};
-    use provider::Provider;
-    use super::Client;
+    use super::*;
+    use crate::token::{Bearer, Static};
 
     struct Test {
         auth_uri: Url,

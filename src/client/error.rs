@@ -5,8 +5,8 @@ use reqwest;
 use serde_json;
 use url;
 
-use client::response::ParseError;
-use error::OAuth2Error;
+use crate::client::response::ParseError;
+use crate::error::OAuth2Error;
 
 /// Errors that can occur during authorization.
 #[derive(Debug)]
@@ -44,18 +44,7 @@ impl fmt::Display for ClientError {
 }
 
 impl Error for ClientError {
-    fn description(&self) -> &str {
-        match *self {
-            ClientError::Io(ref err) => err.description(),
-            ClientError::Url(ref err) => err.description(),
-            ClientError::Reqwest(ref err) => err.description(),
-            ClientError::Json(ref err) => err.description(),
-            ClientError::Parse(ref err) => err.description(),
-            ClientError::OAuth2(ref err) => err.description(),
-        }
-    }
-
-    fn cause(&self) -> Option<&Error> {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
         match *self {
             ClientError::Io(ref err) => Some(err),
             ClientError::Url(ref err) => Some(err),

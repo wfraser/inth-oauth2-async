@@ -5,7 +5,7 @@ use std::fmt;
 
 use serde_json::Value;
 
-use client::response::{FromResponse, ParseError};
+use crate::client::response::{FromResponse, ParseError};
 
 /// OAuth 2.0 error codes.
 ///
@@ -106,8 +106,7 @@ impl FromResponse for OAuth2Error {
 
 #[cfg(test)]
 mod tests {
-    use client::response::{FromResponse, ParseError};
-    use super::{OAuth2Error, OAuth2ErrorCode};
+    use super::*;
 
     #[test]
     fn from_response_empty() {

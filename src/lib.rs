@@ -31,8 +31,8 @@
 //! ### Creating a client
 //!
 //! ```
-//! use inth_oauth2::Client;
-//! use inth_oauth2::provider::google::Installed;
+//! use inth_oauth2_async::Client;
+//! use inth_oauth2_async::provider::google::Installed;
 //!
 //! let client = Client::new(
 //!     Installed,
@@ -45,8 +45,8 @@
 //! ### Constructing an authorization URI
 //!
 //! ```
-//! # use inth_oauth2::Client;
-//! # use inth_oauth2::provider::google::Installed;
+//! # use inth_oauth2_async::Client;
+//! # use inth_oauth2_async::provider::google::Installed;
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //! let auth_uri = client.auth_uri(Some("scope"), Some("state"));
 //! println!("Authorize the application by clicking on the link: {}", auth_uri);
@@ -55,11 +55,9 @@
 //! ### Requesting an access token
 //!
 //! ```no_run
-//! # extern crate inth_oauth2;
-//! # extern crate reqwest;
 //! use std::io;
-//! use inth_oauth2::{Client, Token};
-//! # use inth_oauth2::provider::google::Installed;
+//! use inth_oauth2_async::{Client, Token};
+//! # use inth_oauth2_async::provider::google::Installed;
 //! # fn main() {
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //!
@@ -75,10 +73,8 @@
 //! ### Refreshing an access token
 //!
 //! ```no_run
-//! # extern crate inth_oauth2;
-//! # extern crate reqwest;
-//! # use inth_oauth2::Client;
-//! # use inth_oauth2::provider::google::Installed;
+//! # use inth_oauth2_async::Client;
+//! # use inth_oauth2_async::provider::google::Installed;
 //! # fn main() {
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //! # let http = reqwest::Client::new();
@@ -90,10 +86,8 @@
 //! ### Ensuring an access token is still valid
 //!
 //! ```no_run
-//! # extern crate inth_oauth2;
-//! # extern crate reqwest;
-//! # use inth_oauth2::Client;
-//! # use inth_oauth2::provider::google::Installed;
+//! # use inth_oauth2_async::Client;
+//! # use inth_oauth2_async::provider::google::Installed;
 //! # fn main() {
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //! # let http = reqwest::Client::new();
@@ -106,11 +100,9 @@
 //! ### Using bearer access tokens
 //!
 //! ```no_run
-//! # extern crate inth_oauth2;
-//! # extern crate reqwest;
-//! # use inth_oauth2::Client;
-//! # use inth_oauth2::provider::google::Installed;
-//! use inth_oauth2::Token;
+//! # use inth_oauth2_async::Client;
+//! # use inth_oauth2_async::provider::google::Installed;
+//! use inth_oauth2_async::Token;
 //!
 //! # fn main() {
 //! # let oauth_client = Client::new(Installed, String::new(), String::new(), None);
@@ -127,11 +119,9 @@
 //! All token types implement `Serialize` and `Deserialize` from `serde`.
 //!
 //! ```no_run
-//! # extern crate inth_oauth2;
-//! # extern crate reqwest;
 //! extern crate serde_json;
-//! # use inth_oauth2::Client;
-//! # use inth_oauth2::provider::google::Installed;
+//! # use inth_oauth2_async::Client;
+//! # use inth_oauth2_async::provider::google::Installed;
 //! # fn main() {
 //! # let http = reqwest::Client::new();
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
@@ -157,11 +147,6 @@ extern crate lazy_static;
 
 #[macro_use]
 extern crate serde_derive;
-
-extern crate chrono;
-extern crate reqwest;
-extern crate serde_json;
-extern crate url;
 
 pub mod token;
 pub mod provider;

@@ -1,10 +1,6 @@
-extern crate reqwest;
-extern crate inth_oauth2;
-
+use inth_oauth2_async::Client;
+use inth_oauth2_async::provider::google::Web;
 use std::io;
-
-use inth_oauth2::Client;
-use inth_oauth2::provider::google::Web;
 
 fn main() {
     let http_client = reqwest::Client::new();

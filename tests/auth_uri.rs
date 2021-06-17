@@ -1,9 +1,5 @@
-extern crate reqwest;
-extern crate inth_oauth2;
-extern crate url;
-
-use inth_oauth2::Client;
-use inth_oauth2::provider::*;
+use inth_oauth2_async::Client;
+use inth_oauth2_async::provider::*;
 use url::Url;
 
 fn assert_get_uri_ok(uri: Url) {

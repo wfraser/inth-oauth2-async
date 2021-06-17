@@ -2,7 +2,7 @@
 
 use url::Url;
 
-use token::{Token, Lifetime, Bearer, Static, Refresh};
+use crate::token::{Token, Lifetime, Bearer, Static, Refresh};
 
 /// OAuth 2.0 providers.
 pub trait Provider {
@@ -36,9 +36,8 @@ pub trait Provider {
 /// See [Using OAuth 2.0 to Access Google
 /// APIs](https://developers.google.com/identity/protocols/OAuth2).
 pub mod google {
-    use url::Url;
-    use token::{Bearer, Expiring, Refresh};
-    use super::Provider;
+    use super::*;
+    use crate::token::Expiring;
 
     /// Signals the server to return the authorization code by prompting the user to copy and
     /// paste.

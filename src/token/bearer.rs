@@ -1,7 +1,7 @@
 use serde_json::Value;
 
-use client::response::{FromResponse, ParseError};
-use token::{Token, Lifetime};
+use crate::client::response::{FromResponse, ParseError};
+use crate::token::{Token, Lifetime};
 
 /// The bearer token type.
 ///
@@ -69,11 +69,9 @@ impl<L: Lifetime> FromResponse for Bearer<L> {
 
 #[cfg(test)]
 mod tests {
-    use chrono::{Utc, Duration};
-
-    use client::response::{FromResponse, ParseError};
-    use token::{Static, Refresh};
-    use super::Bearer;
+    use super::*;
+    use crate::token::{Bearer, Refresh, Static};
+    use chrono::{Duration, Utc};
 
     #[test]
     fn from_response_with_invalid_token_type() {

@@ -15,7 +15,7 @@ pub use self::expiring::Expiring;
 pub use self::refresh::Refresh;
 pub use self::statik::Static;
 
-use client::response::FromResponse;
+use crate::client::response::FromResponse;
 
 /// OAuth 2.0 tokens.
 ///

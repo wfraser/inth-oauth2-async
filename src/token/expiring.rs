@@ -1,8 +1,8 @@
 use chrono::{DateTime, Utc, Duration};
 use serde_json::Value;
 
-use client::response::{FromResponse, ParseError};
-use token::Lifetime;
+use crate::client::response::{FromResponse, ParseError};
+use crate::token::Lifetime;
 
 /// An expiring token.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -39,10 +39,7 @@ impl FromResponse for Expiring {
 
 #[cfg(test)]
 mod tests {
-    use chrono::{Utc, Duration};
-
-    use client::response::FromResponse;
-    use super::Expiring;
+    use super::*;
 
     #[test]
     fn from_response() {
