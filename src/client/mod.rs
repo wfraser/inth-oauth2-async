@@ -110,14 +110,17 @@ impl<P: Provider> Client<P> {
     async fn post_token(
         &self,
         http_client: &reqwest::Client,
-        mut body: Serializer<'_, String>,
+        body: String,
     ) -> Result<Value, ClientError> {
-        if self.provider.credentials_in_body() {
-            body.append_pair("client_id", &self.client_id);
-            body.append_pair("client_secret", &self.client_secret);
-        }
-
-        let body = body.finish();
+        let body = {
+            // Serializer can't go across await points. See https://github.com/servo/rust-url/pull/550
+            let mut body = Serializer::new(body);
+            if self.provider.credentials_in_body() {
+                body.append_pair("client_id", &self.client_id);
+                body.append_pair("client_secret", &self.client_secret);
+            }
+            body.finish()
+        };
 
         let response = http_client
             .post(self.provider.token_uri().clone())
@@ -148,13 +151,18 @@ impl<P: Provider> Client<P> {
         http_client: &reqwest::Client,
         code: &str,
     ) -> Result<P::Token, ClientError> {
-        let mut body = Serializer::new(String::new());
-        body.append_pair("grant_type", "authorization_code");
-        body.append_pair("code", code);
+        let body = {
+            // Serializer can't go across await points. See https://github.com/servo/rust-url/pull/550
+            let mut body = Serializer::new(String::new());
+            body.append_pair("grant_type", "authorization_code");
+            body.append_pair("code", code);
 
-        if let Some(ref redirect_uri) = self.redirect_uri {
-            body.append_pair("redirect_uri", redirect_uri);
-        }
+            if let Some(ref redirect_uri) = self.redirect_uri {
+                body.append_pair("redirect_uri", redirect_uri);
+            }
+
+            body.finish()
+        };
 
         let json = self.post_token(http_client, body).await?;
         let token = P::Token::from_response(&json)?;
@@ -172,13 +180,18 @@ impl<P> Client<P> where P: Provider, P::Token: Token<Refresh> {
         token: P::Token,
         scope: Option<&str>,
     ) -> Result<P::Token, ClientError> {
-        let mut body = Serializer::new(String::new());
-        body.append_pair("grant_type", "refresh_token");
-        body.append_pair("refresh_token", token.lifetime().refresh_token());
+        let body = {
+            // Serializer can't go across await points. See https://github.com/servo/rust-url/pull/550
+            let mut body = Serializer::new(String::new());
+            body.append_pair("grant_type", "refresh_token");
+            body.append_pair("refresh_token", token.lifetime().refresh_token());
 
-        if let Some(scope) = scope {
-            body.append_pair("scope", scope);
-        }
+            if let Some(scope) = scope {
+                body.append_pair("scope", scope);
+            }
+
+            body.finish()
+        };
 
         let json = self.post_token(http_client, body).await?;
         let token = P::Token::from_response_inherit(&json, &token)?;
