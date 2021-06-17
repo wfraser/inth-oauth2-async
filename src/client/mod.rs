@@ -107,10 +107,10 @@ impl<P: Provider> Client<P> {
         uri
     }
 
-    fn post_token(
+    async fn post_token(
         &self,
         http_client: &reqwest::Client,
-        mut body: Serializer<String>,
+        mut body: Serializer<'_, String>,
     ) -> Result<Value, ClientError> {
         if self.provider.credentials_in_body() {
             body.append_pair("client_id", &self.client_id);
@@ -119,15 +119,17 @@ impl<P: Provider> Client<P> {
 
         let body = body.finish();
 
-        let mut response = http_client
+        let response = http_client
             .post(self.provider.token_uri().clone())
             .basic_auth(&self.client_id, Some(&self.client_secret))
             .header(ACCEPT, "application/json")
             .header(CONTENT_TYPE, "application/x-www-form-urlencoded")
             .body(body)
-            .send()?;
+            .send()
+            .await?;
 
-        let json = serde_json::from_reader(&mut response)?;
+        let full = response.bytes().await?;
+        let json = serde_json::from_slice(&full)?;
 
         let error = OAuth2Error::from_response(&json);
 
@@ -141,7 +143,7 @@ impl<P: Provider> Client<P> {
     /// Requests an access token using an authorization code.
     ///
     /// See [RFC 6749, section 4.1.3](http://tools.ietf.org/html/rfc6749#section-4.1.3).
-    pub fn request_token(
+    pub async fn request_token(
         &self,
         http_client: &reqwest::Client,
         code: &str,
@@ -154,7 +156,7 @@ impl<P: Provider> Client<P> {
             body.append_pair("redirect_uri", redirect_uri);
         }
 
-        let json = self.post_token(http_client, body)?;
+        let json = self.post_token(http_client, body).await?;
         let token = P::Token::from_response(&json)?;
         Ok(token)
     }
@@ -164,7 +166,7 @@ impl<P> Client<P> where P: Provider, P::Token: Token<Refresh> {
     /// Refreshes an access token.
     ///
     /// See [RFC 6749, section 6](http://tools.ietf.org/html/rfc6749#section-6).
-    pub fn refresh_token(
+    pub async fn refresh_token(
         &self,
         http_client: &reqwest::Client,
         token: P::Token,
@@ -178,19 +180,19 @@ impl<P> Client<P> where P: Provider, P::Token: Token<Refresh> {
             body.append_pair("scope", scope);
         }
 
-        let json = self.post_token(http_client, body)?;
+        let json = self.post_token(http_client, body).await?;
         let token = P::Token::from_response_inherit(&json, &token)?;
         Ok(token)
     }
 
     /// Ensures an access token is valid by refreshing it if necessary.
-    pub fn ensure_token(
+    pub async fn ensure_token(
         &self,
         http_client: &reqwest::Client,
         token: P::Token,
     ) -> Result<P::Token, ClientError> {
         if token.lifetime().expired() {
-            self.refresh_token(http_client, token, None)
+            self.refresh_token(http_client, token, None).await
         } else {
             Ok(token)
         }

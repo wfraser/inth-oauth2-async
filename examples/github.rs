@@ -2,7 +2,8 @@ use inth_oauth2_async::Client;
 use inth_oauth2_async::provider::GitHub;
 use std::io;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let http_client = reqwest::Client::new();
 
     let client = Client::new(
@@ -18,6 +19,6 @@ fn main() {
     let mut code = String::new();
     io::stdin().read_line(&mut code).unwrap();
 
-    let token = client.request_token(&http_client, code.trim()).unwrap();
+    let token = client.request_token(&http_client, code.trim()).await.unwrap();
     println!("{:?}", token);
 }

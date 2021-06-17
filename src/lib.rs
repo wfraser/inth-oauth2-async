@@ -58,14 +58,15 @@
 //! use std::io;
 //! use inth_oauth2_async::{Client, Token};
 //! # use inth_oauth2_async::provider::google::Installed;
-//! # fn main() {
+//! # #[tokio::main]
+//! # async fn main() {
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //!
 //! let mut code = String::new();
 //! io::stdin().read_line(&mut code).unwrap();
 //!
 //! let http = reqwest::Client::new();
-//! let token = client.request_token(&http, code.trim()).unwrap();
+//! let token = client.request_token(&http, code.trim()).await.unwrap();
 //! println!("{}", token.access_token());
 //! # }
 //! ```
@@ -75,11 +76,12 @@
 //! ```no_run
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
-//! # fn main() {
+//! # #[tokio::main]
+//! # async fn main() {
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //! # let http = reqwest::Client::new();
-//! # let token = client.request_token(&http, "").unwrap();
-//! let token = client.refresh_token(&http, token, None).unwrap();
+//! # let token = client.request_token(&http, "").await.unwrap();
+//! let token = client.refresh_token(&http, token, None).await.unwrap();
 //! # }
 //! ```
 //!
@@ -88,12 +90,13 @@
 //! ```no_run
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
-//! # fn main() {
+//! # #[tokio::main]
+//! # async fn main() {
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //! # let http = reqwest::Client::new();
-//! # let mut token = client.request_token(&http, "").unwrap();
+//! # let mut token = client.request_token(&http, "").await.unwrap();
 //! // Refresh token only if it has expired.
-//! token = client.ensure_token(&http, token).unwrap();
+//! token = client.ensure_token(&http, token).await.unwrap();
 //! # }
 //! ```
 //!
@@ -104,10 +107,11 @@
 //! # use inth_oauth2_async::provider::google::Installed;
 //! use inth_oauth2_async::Token;
 //!
-//! # fn main() {
+//! # #[tokio::main]
+//! # async fn main() {
 //! # let oauth_client = Client::new(Installed, String::new(), String::new(), None);
 //! # let http = reqwest::Client::new();
-//! # let token = oauth_client.request_token(&http, "").unwrap();
+//! # let token = oauth_client.request_token(&http, "").await.unwrap();
 //! let request = http.get("https://example.com/resource")
 //!     .bearer_auth(token.access_token())
 //!     .build();
@@ -122,10 +126,11 @@
 //! extern crate serde_json;
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
-//! # fn main() {
+//! # #[tokio::main]
+//! # async fn main() {
 //! # let http = reqwest::Client::new();
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
-//! # let token = client.request_token(&http, "").unwrap();
+//! # let token = client.request_token(&http, "").await.unwrap();
 //! let json = serde_json::to_string(&token).unwrap();
 //! # }
 //! ```
