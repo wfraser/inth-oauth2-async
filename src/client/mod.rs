@@ -3,9 +3,11 @@
 mod error;
 pub use error::ClientError;
 
+pub mod http_client;
+pub use http_client::HttpClient;
+
 pub mod response;
 
-use reqwest::header::{ACCEPT, CONTENT_TYPE};
 use serde_json::{self, Value};
 use url::form_urlencoded::Serializer;
 use url::Url;
@@ -109,7 +111,7 @@ impl<P: Provider> Client<P> {
 
     async fn post_token(
         &self,
-        http_client: &reqwest::Client,
+        http_client: &impl HttpClient,
         body: String,
     ) -> Result<Value, ClientError> {
         let body = {
@@ -122,17 +124,14 @@ impl<P: Provider> Client<P> {
             body.finish()
         };
 
-        let response = http_client
-            .post(self.provider.token_uri().clone())
-            .basic_auth(&self.client_id, Some(&self.client_secret))
-            .header(ACCEPT, "application/json")
-            .header(CONTENT_TYPE, "application/x-www-form-urlencoded")
-            .body(body)
-            .send()
+        let json = http_client
+            .post(
+                self.provider.token_uri().as_str(),
+                &self.client_id,
+                &self.client_secret,
+                body,
+            )
             .await?;
-
-        let full = response.bytes().await?;
-        let json = serde_json::from_slice(&full)?;
 
         let error = OAuth2Error::from_response(&json);
 
@@ -148,7 +147,7 @@ impl<P: Provider> Client<P> {
     /// See [RFC 6749, section 4.1.3](http://tools.ietf.org/html/rfc6749#section-4.1.3).
     pub async fn request_token(
         &self,
-        http_client: &reqwest::Client,
+        http_client: &impl HttpClient,
         code: &str,
     ) -> Result<P::Token, ClientError> {
         let body = {
@@ -176,7 +175,7 @@ impl<P> Client<P> where P: Provider, P::Token: Token<Refresh> {
     /// See [RFC 6749, section 6](http://tools.ietf.org/html/rfc6749#section-6).
     pub async fn refresh_token(
         &self,
-        http_client: &reqwest::Client,
+        http_client: &impl HttpClient,
         token: P::Token,
         scope: Option<&str>,
     ) -> Result<P::Token, ClientError> {
@@ -201,7 +200,7 @@ impl<P> Client<P> where P: Provider, P::Token: Token<Refresh> {
     /// Ensures an access token is valid by refreshing it if necessary.
     pub async fn ensure_token(
         &self,
-        http_client: &reqwest::Client,
+        http_client: &impl HttpClient,
         token: P::Token,
     ) -> Result<P::Token, ClientError> {
         if token.lifetime().expired() {
