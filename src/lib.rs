@@ -55,6 +55,7 @@
 //! ### Requesting an access token
 //!
 //! ```no_run
+//! # #[cfg(feature="reqwest-client")] {
 //! use std::io;
 //! use inth_oauth2_async::{Client, Token};
 //! # use inth_oauth2_async::provider::google::Installed;
@@ -68,12 +69,13 @@
 //! let http = reqwest::Client::new();
 //! let token = client.request_token(&http, code.trim()).await.unwrap();
 //! println!("{}", token.access_token());
-//! # }
+//! # } }
 //! ```
 //!
 //! ### Refreshing an access token
 //!
 //! ```no_run
+//! # #[cfg(feature="reqwest-client")] {
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
 //! # #[tokio::main]
@@ -82,12 +84,13 @@
 //! # let http = reqwest::Client::new();
 //! # let token = client.request_token(&http, "").await.unwrap();
 //! let token = client.refresh_token(&http, token, None).await.unwrap();
-//! # }
+//! # } }
 //! ```
 //!
 //! ### Ensuring an access token is still valid
 //!
 //! ```no_run
+//! # #[cfg(feature="reqwest-client")] {
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
 //! # #[tokio::main]
@@ -97,12 +100,13 @@
 //! # let mut token = client.request_token(&http, "").await.unwrap();
 //! // Refresh token only if it has expired.
 //! token = client.ensure_token(&http, token).await.unwrap();
-//! # }
+//! # } }
 //! ```
 //!
 //! ### Using bearer access tokens
 //!
 //! ```no_run
+//! # #[cfg(feature="reqwest-client")] {
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
 //! use inth_oauth2_async::Token;
@@ -115,7 +119,7 @@
 //! let request = http.get("https://example.com/resource")
 //!     .bearer_auth(token.access_token())
 //!     .build();
-//! # }
+//! # } }
 //! ```
 //!
 //! ### Persisting tokens
@@ -123,7 +127,7 @@
 //! All token types implement `Serialize` and `Deserialize` from `serde`.
 //!
 //! ```no_run
-//! extern crate serde_json;
+//! # #[cfg(feature="reqwest-client")] {
 //! # use inth_oauth2_async::Client;
 //! # use inth_oauth2_async::provider::google::Installed;
 //! # #[tokio::main]
@@ -132,7 +136,7 @@
 //! # let client = Client::new(Installed, String::new(), String::new(), None);
 //! # let token = client.request_token(&http, "").await.unwrap();
 //! let json = serde_json::to_string(&token).unwrap();
-//! # }
+//! # } }
 //! ```
 
 #![warn(
