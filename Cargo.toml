@@ -32,8 +32,33 @@ tower-service = {version = "*", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+hyper-tls = "0.5.0"
 
 [features]
 default = ["reqwest-client"]
-hyper-client = ["base64", "hyper", "tokio", "tower-service"]
+hyper-client = ["base64", "hyper/client", "hyper/http1", "hyper/http2", "tokio", "tower-service"]
 reqwest-client = ["reqwest"]
+
+[[example]]
+name = "github"
+required-features = ["reqwest-client"]
+
+[[example]]
+name = "google-web"
+required-features = ["reqwest-client"]
+
+[[example]]
+name = "google-installed"
+required-features = ["reqwest-client"]
+
+[[example]]
+name = "imgur"
+required-features = ["reqwest-client"]
+
+[[test]]
+name = "auth_uri"
+required-features = ["reqwest-client"]
+
+[[test]]
+name = "hyper-client"
+required-features = ["hyper-client"]
