@@ -25,10 +25,10 @@ url = "2.2.2"
 reqwest = { version = "0.11.3", optional = true }
 
 # Hyper client:
-base64 = { version = "*", optional = true }
+base64 = { version = "0.13", optional = true }
 hyper = { version = "0.14", optional = true }
-tokio = { version = "*", optional = true }
-tower-service = {version = "*", optional = true }
+tokio = { version = "1.7", optional = true }
+tower-service = {version = "0.3.1", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
