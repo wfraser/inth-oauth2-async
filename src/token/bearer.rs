@@ -71,7 +71,7 @@ impl<L: Lifetime> FromResponse for Bearer<L> {
 mod tests {
     use super::*;
     use crate::token::{Bearer, Refresh, Static};
-    use chrono::{Duration, Utc};
+    use std::time::{Duration, SystemTime};
 
     #[test]
     fn from_response_with_invalid_token_type() {
@@ -141,8 +141,8 @@ mod tests {
         assert_eq!(None, bearer.scope);
         let refresh = bearer.lifetime;
         assert_eq!("bbbbbbbb", refresh.refresh_token());
-        assert!(refresh.expires() > &Utc::now());
-        assert!(refresh.expires() <= &(Utc::now() + Duration::seconds(3600)));
+        assert!(refresh.expires() > SystemTime::now());
+        assert!(refresh.expires() <= SystemTime::now() + Duration::from_secs(3600));
     }
 
     #[test]
@@ -161,8 +161,8 @@ mod tests {
         assert_eq!(None, bearer.scope);
         let refresh = bearer.lifetime;
         assert_eq!("bbbbbbbb", refresh.refresh_token());
-        assert!(refresh.expires() > &Utc::now());
-        assert!(refresh.expires() <= &(Utc::now() + Duration::seconds(3600)));
+        assert!(refresh.expires() > SystemTime::now());
+        assert!(refresh.expires() <= SystemTime::now() + Duration::from_secs(3600));
         assert_eq!(Some("zzzzzzzzz".to_owned()), bearer.id_token);
     }
 
@@ -190,7 +190,7 @@ mod tests {
         assert_eq!(None, bearer.scope);
         let refresh = bearer.lifetime;
         assert_eq!("bbbbbbbb", refresh.refresh_token());
-        assert!(refresh.expires() > &Utc::now());
-        assert!(refresh.expires() <= &(Utc::now() + Duration::seconds(3600)));
+        assert!(refresh.expires() > SystemTime::now());
+        assert!(refresh.expires() <= SystemTime::now() + Duration::from_secs(3600));
     }
 }

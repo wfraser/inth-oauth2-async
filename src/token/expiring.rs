@@ -1,5 +1,5 @@
-use chrono::{DateTime, Utc, Duration};
 use serde_json::Value;
+use std::time::{Duration, SystemTime};
 
 use crate::client::response::{FromResponse, ParseError};
 use crate::token::Lifetime;
@@ -7,16 +7,16 @@ use crate::token::Lifetime;
 /// An expiring token.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Expiring {
-    expires: DateTime<Utc>,
+    expires: SystemTime,
 }
 
 impl Expiring {
     /// Returns the expiry time of the access token.
-    pub fn expires(&self) -> &DateTime<Utc> { &self.expires }
+    pub fn expires(&self) -> SystemTime { self.expires }
 }
 
 impl Lifetime for Expiring {
-    fn expired(&self) -> bool { self.expires < Utc::now() }
+    fn expired(&self) -> bool { self.expires < SystemTime::now() }
 }
 
 impl FromResponse for Expiring {
@@ -32,7 +32,7 @@ impl FromResponse for Expiring {
             .ok_or(ParseError::ExpectedFieldType("expires_in", "i64"))?;
 
         Ok(Expiring {
-            expires: Utc::now() + Duration::seconds(expires_in),
+            expires: SystemTime::now() + Duration::from_secs(expires_in.try_into().unwrap_or(0)),
         })
     }
 }
@@ -45,7 +45,7 @@ mod tests {
     fn from_response() {
         let json = r#"{"expires_in":3600}"#.parse().unwrap();
         let expiring = Expiring::from_response(&json).unwrap();
-        assert!(expiring.expires > Utc::now());
-        assert!(expiring.expires <= Utc::now() + Duration::seconds(3600));
+        assert!(expiring.expires > SystemTime::now());
+        assert!(expiring.expires <= SystemTime::now() + Duration::from_secs(3600));
     }
 }
