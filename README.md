@@ -12,9 +12,9 @@ OAuth2 really isn't that hard, you know?
 
 ## License
 
-Copyright © 2021, William R. Fraser <wfraser@codewise.org>
+Based on inth-oauth2 v0.16.0, Copyright © 2015, Curtis McEnroe <curtis@cmcenroe.me>
 
-Forked from inth-oauth2 v0.16.0, Copyright © 2015, Curtis McEnroe <curtis@cmcenroe.me>
+Async version (≥ v0.17.0) maintained by Bill Fraser <bill@wfraser.dev> since 2021.
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
