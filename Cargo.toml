@@ -1,6 +1,6 @@
 [package]
 name = "inth-oauth2-async"
-version = "0.19.0-pre"
+version = "0.19.0"
 edition = "2021"
 
 description = "OAuth2 client"
