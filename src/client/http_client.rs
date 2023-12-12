@@ -63,22 +63,18 @@ pub mod reqwest_client {
 pub mod hyper_client {
     use super::*;
     use base64::write::EncoderWriter as Base64Encoder;
-    use hyper::body::HttpBody;
-    use hyper::client::connect::Connection;
+    use http_body_util::BodyExt;
+    use hyper::body::Body;
     use hyper::header::{AUTHORIZATION, ACCEPT, CONTENT_TYPE, HeaderValue};
     use hyper::Request;
+    use hyper_util::client::legacy::connect::Connect;
     use std::io::Write;
-    use tokio::io::{AsyncRead, AsyncWrite};
-    use tower_service::Service;
 
     #[async_trait::async_trait]
-    impl<C, B> HttpClient for hyper::Client<C, B> where
+    impl<C, B> HttpClient for hyper_util::client::legacy::Client<C, B> where
         // (°ー°) ...
-        C: Service<hyper::Uri> + Clone + Send + Sync + 'static,
-        C::Response: AsyncRead + AsyncWrite + Connection + Unpin + Send + 'static,
-        C::Error: Into<Box<dyn std::error::Error + Send + Sync>>,
-        C::Future: Unpin + Send,
-        B: HttpBody + From<String> + Send + 'static,
+        C: Connect + Clone + Send + Sync + 'static,
+        B: Body + From<String> + Send + Unpin + 'static,
         B::Data: Send,
         B::Error: Into<Box<dyn std::error::Error + Send + Sync>>,
     {
@@ -105,8 +101,8 @@ pub mod hyper_client {
                 .header(CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .body(body.into())?;
 
-            let mut response = self.request(req).await?;
-            let full = hyper::body::to_bytes(response.body_mut()).await?;
+            let response = self.request(req).await?;
+            let full = response.into_body().collect().await?.to_bytes();
             let json = serde_json::from_slice(&full)?;
             Ok(json)
         }

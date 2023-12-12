@@ -25,6 +25,10 @@ pub enum ClientError {
     #[cfg(feature = "hyper-client")]
     Hyper(hyper::Error),
 
+    /// Hyper client error
+    #[cfg(feature = "hyper-client")]
+    HyperClient(hyper_util::client::legacy::Error),
+
     /// JSON error.
     Json(serde_json::Error),
 
@@ -57,6 +61,9 @@ impl Error for ClientError {
             ClientError::Hyper(ref err) => Some(err),
 
             #[cfg(feature = "hyper-client")]
+            ClientError::HyperClient(ref err) => Some(err),
+
+            #[cfg(feature = "hyper-client")]
             ClientError::Http(ref err) => Some(err),
         }
     }
@@ -85,3 +92,5 @@ impl_from!(ClientError::Reqwest, reqwest::Error);
 impl_from!(ClientError::Http, hyper::http::Error);
 #[cfg(feature = "hyper-client")]
 impl_from!(ClientError::Hyper, hyper::Error);
+#[cfg(feature = "hyper-client")]
+impl_from!(ClientError::HyperClient, hyper_util::client::legacy::Error);

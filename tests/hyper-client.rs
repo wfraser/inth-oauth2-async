@@ -1,4 +1,5 @@
 use hyper_tls::HttpsConnector;
+use hyper_util::rt::TokioExecutor;
 use inth_oauth2_async::{
     Client,
     error::{OAuth2Error, OAuth2ErrorCode},
@@ -11,7 +12,7 @@ use inth_oauth2_async::{
 #[tokio::test]
 async fn test_hyper_client() {
     let tls = HttpsConnector::new();
-    let hyper = hyper::client::Client::builder().build::<_, hyper::Body>(tls);
+    let hyper = hyper_util::client::legacy::Client::builder(TokioExecutor::new()).build::<_, String>(tls);
 
     let client = Client::new(
         provider::google::Web,
